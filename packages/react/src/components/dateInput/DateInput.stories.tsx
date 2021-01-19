@@ -12,9 +12,10 @@ export default {
   args: {
     id: 'date',
     label: 'Choose a date',
+    helperText: 'Assistive text',
     language: 'en',
     confirmDate: true,
-    datePicker: true,
+    disableDatePicker: false,
     onChange: (value: string, valueAsDate: Date) => {
       // eslint-disable-next-line no-console
       console.log(value, valueAsDate);
@@ -56,5 +57,5 @@ export const WithoutDatePicker = (args) => {
 };
 WithoutDatePicker.storyName = 'Without date picker';
 WithoutDatePicker.args = {
-  datePicker: false,
+  disableDatePicker: true,
 };

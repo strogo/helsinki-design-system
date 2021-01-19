@@ -17,9 +17,9 @@ export type DateInputProps = Omit<TextInputProps, 'onChange'> & {
    */
   confirmDate?: boolean;
   /**
-   * Enable date picker alongside the input
+   * Show the input without the date picker.
    */
-  datePicker?: boolean;
+  disableDatePicker?: boolean;
   /**
    * The initial month open in calendar.
    */
@@ -47,7 +47,7 @@ export type DateInputProps = Omit<TextInputProps, 'onChange'> & {
 export const DateInput = ({
   closeButtonLabel,
   confirmDate = true,
-  datePicker = true,
+  disableDatePicker = false,
   initialMonth = new Date(),
   language = 'en',
   openButtonAriaLabel,
@@ -213,39 +213,40 @@ export const DateInput = ({
     <div className={styles.wrapper}>
       <TextInput
         {...textInputProps}
-        buttonIcon={datePicker ? <IconCalendar aria-hidden /> : undefined}
-        buttonAriaLabel={datePicker ? getOpenButtonLabel() : undefined}
-        onButtonClick={datePicker ? onOpenButtonClick : undefined}
+        buttonIcon={disableDatePicker ? undefined : <IconCalendar aria-hidden />}
+        buttonAriaLabel={disableDatePicker ? undefined : getOpenButtonLabel()}
+        onButtonClick={disableDatePicker ? undefined : onOpenButtonClick}
         onChange={(event) => {
           handleInputChange(event.target.value);
         }}
         value={inputValue}
         ref={inputRef}
         inputMode="numeric"
-      />
-      {datePicker && (
-        <div
-          ref={pickerWrapperRef}
-          className={classNames(styles.pickerWrapper, showPicker && styles.isVisible)}
-          role="dialog"
-          aria-modal="true"
-          aria-hidden={showPicker ? undefined : true}
-        >
-          <DatePicker
-            language={language}
-            confirmDate={confirmDate}
-            selected={isValid(inputValueAsDate) ? inputValueAsDate : undefined}
-            initialMonth={initialMonth}
-            onDaySelect={(day) => {
-              closeDatePicker();
-              handleInputChange(format(day, dateFormat));
-            }}
-            onCloseButtonClick={closeDatePicker}
-            selectButtonLabel={getSelectButtonLabel()}
-            closeButtonLabel={getCloseButtonLabel()}
-          />
-        </div>
-      )}
+      >
+        {disableDatePicker === false && (
+          <div
+            ref={pickerWrapperRef}
+            className={classNames(styles.pickerWrapper, showPicker && styles.isVisible)}
+            role="dialog"
+            aria-modal="true"
+            aria-hidden={showPicker ? undefined : true}
+          >
+            <DatePicker
+              language={language}
+              confirmDate={confirmDate}
+              selected={isValid(inputValueAsDate) ? inputValueAsDate : undefined}
+              initialMonth={initialMonth}
+              onDaySelect={(day) => {
+                closeDatePicker();
+                handleInputChange(format(day, dateFormat));
+              }}
+              onCloseButtonClick={closeDatePicker}
+              selectButtonLabel={getSelectButtonLabel()}
+              closeButtonLabel={getCloseButtonLabel()}
+            />
+          </div>
+        )}
+      </TextInput>
     </div>
   );
 };
